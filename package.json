@@ -30,5 +30,8 @@
     "hrms",
     "upload",
     "hrms"
-  ]
+  ],
+  "directories": {
+    "lib": "lib"
+  }
 }
