@@ -1,27 +1,31 @@
 {
   "name": "@agustriadji/upload-files",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "module upload file HRMS",
   "main": "index.js",
+  "build": "mkdirp ./config/app.js && mkdirp ./config/index.js && mkdirp ./config/upload.js",
   "dependencies": {
     "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
     "form-data": "^3.0.0",
     "multer": "^1.4.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mkdirp": "^1.0.4"
+  },
   "scripts": {
     "test": "node index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/hrms-improvement/upload-files.git"
+    "url": "git+https://github.com/agustriadji/moduleUploadHRMS.git"
   },
   "author": "agustriadji",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/hrms-improvement/upload-files/issues"
+    "url": "https://github.com/agustriadji/moduleUploadHRMS/issues"
   },
-  "homepage": "https://gitlab.com/hrms-improvement/upload-files#readme",
+  "homepage": "https://github.com/agustriadji/moduleUploadHRMS/blob/master/README.md",
   "keywords": [
     "hrms",
     "upload",

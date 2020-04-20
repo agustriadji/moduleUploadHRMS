@@ -80,7 +80,7 @@ module.exports =  {
     multer_err  : multer.MulterError,
 	sendToFileManager : (data,callback_send)=>{
         var bodyFormData = new FormData();
-        if (actionUpload.indexOf(data.action) < 0){
+        if (actionUpload.indexOf(data.action) !== -1){
             bodyFormData.append('filebuffer', fs.createReadStream(`${fileTmp}/${data.filename}`));    
         }
         
@@ -92,7 +92,7 @@ module.exports =  {
         }).post(uploadConfig.urlStore,bodyFormData)
         .then(function (response) {
             if(response.data.header.status == 200){
-                fs.unlinkSync(`${fileTmp}${data.filename}`);
+                fs.unlinkSync(`${fileTmp}/${data.filename}`);
                 return callback_send(null, data);
             }else{
                 return callback_send(true,'Upload Failed')
