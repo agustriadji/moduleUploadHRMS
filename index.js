@@ -102,18 +102,10 @@ module.exports =  {
         });
     },
     getFileManager : (data,callback_send)=>{
-        var bodyFormData = new FormData();
-        
-        bodyFormData.append('filepath', `${data.path}${data.filename}`);
-        bodyFormData.append('action', data.action);
-        
-        axios.create({
-            headers: bodyFormData.getHeaders()
-        }).post(uploadConfig.urlStore,bodyFormData)
+        axios.get(`${uploadConfig.urlStore}?filepath=${data.path}`)
         .then(function (response) {
             if(response.data.header.status == 200){
-                fs.unlinkSync(`${fileTmp}${data.filename}`);
-                return callback_send(null, data);
+                return callback_send(null, response.data);
             }else{
                 return callback_send(true,'Get file failed')
             }
