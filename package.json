@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "node index.js",
-    "preinstall": "cp lib/.env ../../.env && cp -r lib/config ../../config"
+    "install": "cp lib/.env ../../.env && cp -r lib/config ../../config"
   },
   "repository": {
     "type": "git",
