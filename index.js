@@ -6,6 +6,7 @@ const multer = require('multer');
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
+const path = require('path');
 
 // eslint-disable-next-line import/no-unresolved
 const uploadConfig = require('../../../config/upload');
@@ -71,17 +72,22 @@ const uploads = multer({
     storage,
     limits: uploadConfig.limits,
 });
-const actionUpload = ['replace', 'save'];
+// const actionUpload = ['replace', 'save'];
 
 module.exports = {
     files_upload: uploads,
     multer_err: multer.MulterError,
     sendToFileManager: (data, cb) => {
         const bodyFormData = new FormData();
-        if (actionUpload.indexOf(data.action) !== -1) {
+        if (data.action === 'save') {
             bodyFormData.append(
                 'filebuffer',
                 fs.createReadStream(`${fileTmp}/${data.filename}`),
+            );
+        } else if (data.action === 'replace') {
+            bodyFormData.append(
+                'filebuffer',
+                fs.createReadStream(`${fileTmp}/${data.currentFilename}`),
             );
         }
 
@@ -95,7 +101,17 @@ module.exports = {
             .post(uploadConfig.urlStore, bodyFormData)
             .then((response) => {
                 if (response.data.header.status === 200) {
-                    fs.unlinkSync(`${fileTmp}/${data.filename}`);
+                    // fs.unlinkSync(`${fileTmp}/*`);
+                    fs.readdir(`${fileTmp}`, (err, files) => {
+                        if (err) throw err;
+
+                        // eslint-disable-next-line no-restricted-syntax
+                        for (const file of files) {
+                            fs.unlink(path.join(`${fileTmp}`, file), (err) => {
+                                if (err) throw err;
+                            });
+                        }
+                    });
                     return cb(null, data);
                 }
                 return cb(true, 'Upload Failed');
@@ -104,17 +120,17 @@ module.exports = {
                 return cb(true, error);
             });
     },
-    getFileManager: (data, cb) => {
+    getFileManager: (filePATH, cb) => {
         axios
-            .get(`${uploadConfig.urlStore}?filepath=${data.path}`)
-            .then((response) => {
-                if (response.data.header.status === 200) {
-                    return cb(null, response.data);
-                }
-                return cb(true, 'Get file failed');
+            .get(uploadConfig.urlGet, {
+                // headers: { 'Content-Type': ['application/x-www-form-urlencoded','application/json'] },
+                data: filePATH,
             })
-            .catch((error) => {
-                return cb(true, error);
+            .then((resbody) => {
+                if (resbody) {
+                    return cb(null, resbody);
+                }
+                return cb('Get file failed', null);
             });
     },
 };
