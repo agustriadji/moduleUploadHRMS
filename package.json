@@ -1,9 +1,8 @@
 {
   "name": "@agustriadji/upload-files",
-  "version": "1.0.2",
+  "version": "0.0.1",
   "description": "module upload file HRMS",
   "main": "index.js",
-  "build": "mkdirp ./config/app.js && mkdirp ./config/index.js && mkdirp ./config/upload.js",
   "dependencies": {
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
@@ -14,7 +13,8 @@
     "mkdirp": "^1.0.4"
   },
   "scripts": {
-    "test": "node index.js"
+    "test": "node index.js",
+    "preinstall": "cp lib/.env ../../.env && cp -r lib/config ../../config"
   },
   "repository": {
     "type": "git",

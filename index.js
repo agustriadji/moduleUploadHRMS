@@ -35,13 +35,6 @@ function fileFilter (req, file, cb){
         ext       = split_ext[1],
         check_ext = uploadConfig.fileExt.indexOf(ext.toLowerCase()); 
         
-        // ROLLBACK FUNCTION , lakukan perbaikan pada front-end
-        // FRONT-END KIRIM STRING UNTUK FIELD DATA HARUS DI CONVERT KE OBJECT DAHULU
-        // if(req.body.data){
-        //     req.body.data = JSON.parse(req.body.data);    
-        // }
-        
-        
         if(split_ext.length > 2){
             msg.header.message = uploadConfig.message.error.filename;
             return cb(msg);
@@ -67,6 +60,7 @@ function fileFilter (req, file, cb){
         return cb(null,false); // request not multipart
     }
 }
+
 
 const uploads = multer({
                     fileFilter : fileFilter,
