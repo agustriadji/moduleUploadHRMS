@@ -72,6 +72,7 @@ const uploads = multer({
     storage,
     limits: uploadConfig.limits,
 });
+// const actionUpload = ['replace', 'save'];
 
 module.exports = {
     files_upload: uploads,
@@ -106,9 +107,8 @@ module.exports = {
 
                         // eslint-disable-next-line no-restricted-syntax
                         for (const file of files) {
-                            // eslint-disable-next-line no-shadow
-                            fs.unlink(path.join(`${fileTmp}`, file), (err) => {
-                                if (err) throw err;
+                            fs.unlink(path.join(`${fileTmp}`, file), (errs) => {
+                                if (errs) throw errs;
                             });
                         }
                     });
@@ -120,35 +120,17 @@ module.exports = {
                 return cb(true, error);
             });
     },
-    getFileManager: (data, cb) => {
-        async function downloadImage(cbDownload) {
-            const url = uploadConfig.urlGet;
-            const paths = path.resolve(
-                __dirname,
-                '../../../tmp',
-                data.filename,
-            );
-            const writer = fs.createWriteStream(paths);
-
-            const response = await axios({
-                url,
-                method: 'GET',
-                responseType: 'stream',
-                data: { filepath: data.path },
+    getFileManager: (filePATH, cb) => {
+        axios
+            .get(uploadConfig.urlGet, {
+                // headers: { 'Content-Type': ['application/x-www-form-urlencoded','application/json'] },
+                data: filePATH,
+            })
+            .then((resbody) => {
+                if (resbody) {
+                    return cb(null, resbody);
+                }
+                return cb('Get file failed', null);
             });
-
-            response.data.pipe(writer);
-            cbDownload(response);
-            return new Promise((resolve, reject) => {
-                writer.on('finish', resolve);
-                writer.on('error', reject);
-            });
-        }
-
-        downloadImage((resp) => {
-            setTimeout(() => {
-                return cb(resp);
-            }, 500);
-        });
     },
 };
