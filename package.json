@@ -1,6 +1,6 @@
 {
   "name": "@agustriadji/upload-files",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "module upload file HRMS",
   "main": "index.js",
   "dependencies": {
