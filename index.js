@@ -107,17 +107,19 @@ module.exports = {
                         // eslint-disable-next-line no-restricted-syntax
                         for (const file of files) {
                             // eslint-disable-next-line no-shadow
-                            fs.unlink(path.join(`${fileTmp}`, file), (err) => {
-                                if (err) throw err;
+                            fs.unlink(path.join(`${fileTmp}`, file), () => {
+                                // if (err) throw err;
                             });
                         }
                     });
                     return cb(null, data);
                 }
-                return cb(true, 'Upload Failed');
+                return cb('Upload Failed', null);
             })
             .catch((error) => {
-                return cb(true, error);
+                const msg = error.toJSON();
+                // eslint-disable-next-line no-console
+                console.log(`File-manager : ${msg.name}`);
             });
     },
     getFileManager: (data, cb) => {
