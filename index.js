@@ -126,6 +126,7 @@ module.exports = {
             .catch((error) => {
                 const msg = error.toJSON();
                 // eslint-disable-next-line no-console
+                return cb(msg, null);
                 console.log(`File-manager : ${msg.name}`);
             });
     },
