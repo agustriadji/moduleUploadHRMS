@@ -15,6 +15,7 @@
     -   **urlStore**    : API Address untuk request upload.
     -   **urlGet**      : API Address untuk request view file / download file.
     -   **fileSize**    : Nilai Maksimum dari filesize yang diperbolehkan, satuan (byte).
+    -   **prefixFile**  : Nama prefix file.
     -   **filePath**    : Pengaturan path upload yang akan disimpan pada servis file-manager.
     -   **fileExt**     : Filter extension yang diperbolehkan.
     -   **limits**      : Pengaturan pembatasan request terkait attack ddos.

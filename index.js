@@ -58,6 +58,13 @@ function fileFilter(req, file, cb) {
             filename: `${splitExt[0]}_${Date.now()}.${ext}`,
             path: uploadConfig.filePath,
         };
+        if (uploadConfig.prefixFile !== undefined && uploadConfig.prefixFile) {
+            // eslint-disable-next-line no-param-reassign
+            file.data.filename = `${
+                uploadConfig.prefixFile
+            }${Date.now()}.${ext}`;
+        }
+
         // eslint-disable-next-line no-param-reassign
         file.originalname = file.data.filename;
 
