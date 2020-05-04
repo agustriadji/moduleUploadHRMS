@@ -97,38 +97,42 @@ module.exports = {
             );
         }
 
-        bodyFormData.append('filepath', `${data.path}${data.filename}`);
-        bodyFormData.append('action', data.action);
+        if (data.path === undefined || data.filename === undefined) {
+            return cb('Upload Failed : Path or Filename is required.', null);
+        } else {
+            bodyFormData.append('filepath', `${data.path}${data.filename}`);
+            bodyFormData.append('action', data.action);
+            axios
+                .create({
+                    headers: bodyFormData.getHeaders(),
+                })
+                .post(uploadConfig.urlStore, bodyFormData)
+                .then((response) => {
+                    if (response.data.header.status === 200) {
+                        // fs.unlinkSync(`${fileTmp}/*`);
+                        fs.readdir(`${fileTmp}`, (err, files) => {
+                            if (err) return cb(null, data);
 
-        axios
-            .create({
-                headers: bodyFormData.getHeaders(),
-            })
-            .post(uploadConfig.urlStore, bodyFormData)
-            .then((response) => {
-                if (response.data.header.status === 200) {
-                    // fs.unlinkSync(`${fileTmp}/*`);
-                    fs.readdir(`${fileTmp}`, (err, files) => {
-                        if (err) throw err;
-
-                        // eslint-disable-next-line no-restricted-syntax
-                        for (const file of files) {
-                            // eslint-disable-next-line no-shadow
-                            fs.unlink(path.join(`${fileTmp}`, file), () => {
-                                // if (err) throw err;
-                            });
-                        }
-                    });
-                    return cb(null, data);
-                }
-                return cb('Upload Failed', null);
-            })
-            .catch((error) => {
-                const msg = error.toJSON();
-                // eslint-disable-next-line no-console
-                return cb(msg, null);
-                console.log(`File-manager : ${msg.name}`);
-            });
+                            // eslint-disable-next-line no-restricted-syntax
+                            for (const file of files) {
+                                // eslint-disable-next-line no-shadow
+                                fs.unlink(path.join(`${fileTmp}`, file), () => {
+                                    // if (err) throw err;
+                                });
+                            }
+                        });
+                        return cb(null, data);
+                    } else {
+                        return cb('Upload Failed', null);
+                    }
+                })
+                .catch((error) => {
+                    const msg = error;
+                    // eslint-disable-next-line no-console
+                    console.log(msg, 'UPLOADFILES');
+                    return cb('Cannot find file update.', null);
+                });
+        }
     },
     getFileManager: (data, cb) => {
         async function downloadImage(cbDownload) {
