@@ -28,7 +28,7 @@
   "scripts": {
     "test": "node index.js",
     "preinstall": "mkdir config",
-    "install": "cp lib/.env ../../../.env.example && cp -r lib/config ../../../config && mkdir tmp",
+    "install": "cp lib/.env ../../../.env.example && cp -r lib/config ../../../config && mkdir ../../../config",
     "dev": "npm i && index.js",
     "lint": "eslint .",
     "release": "standard-version",
