@@ -144,11 +144,17 @@ module.exports = {
             );
             const writer = fs.createWriteStream(paths);
 
+            let filepaths = `${data.path}${data.filename}`;
+            const split = data.path.split('/');
+            const checkLast = split[split.length - 1];
+            if (checkLast !== '/') {
+                filepaths = `${data.path}/${data.filename}`;
+            }
             const response = await axios({
                 url,
                 method: 'GET',
                 responseType: 'stream',
-                data: { filepath: `${data.path}${data.filename}` },
+                data: { filepath: filepaths },
             });
 
             response.data.pipe(writer);
