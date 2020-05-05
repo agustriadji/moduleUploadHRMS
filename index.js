@@ -148,7 +148,7 @@ module.exports = {
                 url,
                 method: 'GET',
                 responseType: 'stream',
-                data: { filepath: data.path },
+                data: { filepath: `${data.path}${data.filename}` },
             });
 
             response.data.pipe(writer);
