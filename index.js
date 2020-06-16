@@ -109,18 +109,20 @@ module.exports = {
                 .post(uploadConfig.urlStore, bodyFormData)
                 .then((response) => {
                     if (response.data.header.status === 200) {
-                        // fs.unlinkSync(`${fileTmp}/*`);
-                        fs.readdir(`${fileTmp}`, (err, files) => {
-                            if (err) return cb(null, data);
-
-                            // eslint-disable-next-line no-restricted-syntax
-                            for (const file of files) {
-                                // eslint-disable-next-line no-shadow
-                                fs.unlink(path.join(`${fileTmp}`, file), () => {
-                                    // if (err) throw err;
-                                });
-                            }
-                        });
+                        try {
+                            fs.readdir(`${fileTmp}`, (err, files) => {
+                                if (err) return cb(null, data);
+    
+                                // eslint-disable-next-line no-restricted-syntax
+                                for (const file of files) {
+                                    // eslint-disable-next-line no-shadow
+                                    fs.unlink(path.join(`${fileTmp}`, file), (err) => {
+                                    });
+                                }
+                            });   
+                        } catch (error) {
+                            
+                        }
                         return cb(null, data);
                     } else {
                         return cb('Upload Failed', null);
@@ -129,7 +131,7 @@ module.exports = {
                 .catch((error) => {
                     const msg = error;
                     // eslint-disable-next-line no-console
-                    console.log(msg, 'UPLOADFILES');
+                    console.log(msg.toString(), 'UPLOADFILES');
                     return cb('Cannot find file update.', null);
                 });
         }
@@ -150,19 +152,40 @@ module.exports = {
             if (checkLast !== '/') {
                 filepaths = `${data.path}/${data.filename}`;
             }
+            // const response = await axios({
+            //     url,
+            //     method: 'GET',
+            //     responseType: 'stream',
+            //     data: { filepath: filepaths },
+            // });
+
             const response = await axios({
                 url,
                 method: 'GET',
                 responseType: 'stream',
                 data: { filepath: filepaths },
+            }).catch((err)=>{
+                return cbDownload(err, null);
+                console.log(err.toString(), 77)
             });
 
-            response.data.pipe(writer);
-            cbDownload(response);
-            return new Promise((resolve, reject) => {
-                writer.on('finish', resolve);
-                writer.on('error', reject);
-            });
+            if(response){
+                response.data.pipe(writer);
+                cbDownload(response);
+                return new Promise((resolve, reject) => {
+                    console.log(resolve, reject, 77)
+                    writer.on('finish', resolve);
+                    writer.on('error', reject);
+                });
+            }else{
+                return cbDownload(response, null);
+            }
+            // response.data.pipe(writer);
+            // cbDownload(response);
+            // return new Promise((resolve, reject) => {
+            //     writer.on('finish', resolve);
+            //     writer.on('error', reject);
+            // });
         }
 
         downloadImage((resp) => {
