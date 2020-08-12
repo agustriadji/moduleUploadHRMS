@@ -1,6 +1,6 @@
 {
   "name": "@agustriadji/upload-files",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "module upload file HRMS",
   "main": "index.js",
   "dependencies": {
@@ -28,7 +28,7 @@
   "scripts": {
     "test": "node index.js",
     "preinstall": "mkdir config",
-    "install": "cp lib/.env ../../../.env.example && cp -r lib/config ../../../config && mkdir ../../../tmp",
+    "install": "cp lib/.env ../../../.env.example && cp -r lib/config ../../../config",
     "dev": "npm i && index.js",
     "lint": "eslint .",
     "release": "standard-version",
